@@ -9,9 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const danishDisplayElement = document.getElementById('danish-display');
     const versucheElement = document.getElementById('versuche');
     const punkteElement = document.getElementById('punkte');
-    const eingabeElement = document.getElementById('eingabe');
-    const ratenButton = document.getElementById('raten-button');
+    const buchstabenContainer = document.getElementById('buchstaben-container');
     const neustartButton = document.getElementById('neustart-button');
+
+    // Alphabet für die Buttons
+    const alphabet = 'abcdefghijklmnopqrstuvwxyzæøå'.split('');
 
     // Vokabeln laden
     fetch('vokabeln.csv')
@@ -31,7 +33,14 @@ document.addEventListener('DOMContentLoaded', () => {
         versuche = 3;
         aktualisiereAnzeige();
         neustartButton.style.display = 'none';
-        ratenButton.disabled = false;
+        buchstabenContainer.innerHTML = ''; // Buttons zurücksetzen
+        alphabet.forEach(buchstabe => {
+            const button = document.createElement('button');
+            button.textContent = buchstabe.toUpperCase();
+            button.classList.add('buchstabe-button');
+            button.addEventListener('click', () => buchstabeRaten(buchstabe));
+            buchstabenContainer.appendChild(button);
+        });
     }
 
     // Anzeige aktualisieren
@@ -39,18 +48,15 @@ document.addEventListener('DOMContentLoaded', () => {
         deutschesWortElement.textContent = `Deutsches Wort: ${aktuellesWort.deutsch}`;
         danishDisplayElement.textContent = aktuellesWort.danish
             .split('')
-            .map(buchstabe => (gerateneBuchstaben.includes(buchstabe) ? buchstabe : '_'))
+            .map(buchstabe => (gerateneBuchstaben.includes(buchstabe.toLowerCase()) ? buchstabe : '_'))
             .join(' ');
         versucheElement.textContent = `Verbleibende Versuche: ${versuche}`;
         punkteElement.textContent = `Punkte: ${punkte}`;
     }
 
     // Buchstabe raten
-    ratenButton.addEventListener('click', () => {
-        const buchstabe = eingabeElement.value.toLowerCase();
-        eingabeElement.value = '';
-
-        if (!buchstabe || gerateneBuchstaben.includes(buchstabe)) return;
+    function buchstabeRaten(buchstabe) {
+        if (gerateneBuchstaben.includes(buchstabe)) return;
 
         gerateneBuchstaben.push(buchstabe);
 
@@ -61,15 +67,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (versuche === 0) {
             alert(`Game Over! Das dänische Wort war: ${aktuellesWort.danish}`);
             neustartButton.style.display = 'block';
-            ratenButton.disabled = true;
-        } else if (aktuellesWort.danish.split('').every(b => gerateneBuchstaben.includes(b))) {
+            buchstabenContainer.querySelectorAll('button').forEach(button => button.disabled = true);
+        } else if (aktuellesWort.danish.split('').every(b => gerateneBuchstaben.includes(b.toLowerCase()))) {
             punkte++;
             alert('Richtig! Du hast einen Punkt erhalten.');
             neuesSpiel();
         }
 
         aktualisiereAnzeige();
-    });
+        document.querySelector(`.buchstabe-button[disabled]`); // Deaktiviere den geratenen Buchstaben
+    }
 
     // Neustart
     neustartButton.addEventListener('click', () => {
