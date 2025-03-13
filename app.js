@@ -201,7 +201,11 @@ document.addEventListener('DOMContentLoaded', () => {
             aktuellesWort = spielstand.aktuellesWort || null;
             gerateneBuchstaben = spielstand.gerateneBuchstaben || [];
             falscheVersuche = spielstand.falscheVersuche || 0;
-            erstesSpiel = spielstand.erstesSpiel || true;
+            if (spielstand.erstesSpiel === false) {
+                erstesSpiel = false;
+            } else {
+                erstesSpiel = true;
+            }
         }
     }
 });
