@@ -187,7 +187,8 @@ document.addEventListener('DOMContentLoaded', () => {
             punkte,
             aktuellesWort,
             gerateneBuchstaben,
-            falscheVersuche
+            falscheVersuche,
+            erstesSpiel
         };
         localStorage.setItem('hangmanSpielstand', JSON.stringify(spielstand));
     }
@@ -200,6 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
             aktuellesWort = spielstand.aktuellesWort || null;
             gerateneBuchstaben = spielstand.gerateneBuchstaben || [];
             falscheVersuche = spielstand.falscheVersuche || 0;
+            erstesSpiel = spielstand.erstesSpiel || true;
         }
     }
 });
