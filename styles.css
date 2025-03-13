@@ -65,6 +65,12 @@ h1 {
     opacity: 0.6;
 }
 
+#neustart-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
 #neustart-button {
     padding: 10px 20px;
     font-size: 1em;
@@ -73,4 +79,20 @@ h1 {
     color: white;
     border: none;
     border-radius: 5px;
+    display: none;
+}
+
+#neustart-button:hover {
+    background-color: #a00a28;
+}
+
+.nachricht {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #c60c30;
+    color: white;
+    border-radius: 5px;
+    display: none;
+    font-size: 1.2em;
+    text-align: center;
 }

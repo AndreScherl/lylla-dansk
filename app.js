@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const neustartButton = document.getElementById('neustart-button');
     const canvas = document.getElementById('hangman-canvas');
     const ctx = canvas.getContext('2d');
+    const nachrichtElement = document.getElementById('nachricht');
 
     // Canvas-Größe
     canvas.width = 200;
@@ -55,11 +56,12 @@ document.addEventListener('DOMContentLoaded', () => {
             buchstabenContainer.appendChild(button);
         });
         zeichneHangman(0); // Galgen zurücksetzen
+        nachrichtAusblenden();
     }
 
     // Anzeige aktualisieren
     function aktualisiereAnzeige() {
-        deutschesWortElement.textContent = `Deutsches Wort: ${aktuellesWort.deutsch}`;
+        deutschesWortElement.textContent = `${aktuellesWort.deutsch}`;
         danishDisplayElement.textContent = aktuellesWort.danish
             .split('')
             .map(buchstabe => {
@@ -94,16 +96,37 @@ document.addEventListener('DOMContentLoaded', () => {
             zeichneHangman(falscheVersuche);
         }
 
+        // Überprüfen, ob das Spiel verloren ist
+        if (falscheVersuche === 8) {
+            nachrichtAnzeigen(`Game Over! Das dänische Wort war: ${aktuellesWort.danish}`);
+            buchstabenContainer.querySelectorAll('button').forEach(button => button.disabled = true);
+            neustartButton.style.display = 'block';
+            return;
+        }
+
         // Überprüfen, ob das Wort vollständig geraten wurde (ignoriere Leerzeichen)
         const wortOhneLeerzeichen = aktuellesWort.danish.replace(/\s/g, '');
         const gerateneBuchstabenOhneLeerzeichen = gerateneBuchstaben.filter(b => b !== ' ');
         if (wortOhneLeerzeichen.split('').every(b => gerateneBuchstabenOhneLeerzeichen.includes(b.toLowerCase()))) {
             punkte++;
-            alert('Richtig! Du hast einen Punkt erhalten.');
-            neuesSpiel(); // Neues Spiel starten
+            nachrichtAnzeigen('Richtig! Du hast einen Punkt erhalten.');
+            setTimeout(() => {
+                neuesSpiel();
+            }, 3000);
         }
 
         aktualisiereAnzeige();
+    }
+
+    // Nachricht anzeigen
+    function nachrichtAnzeigen(text) {
+        nachrichtElement.textContent = text;
+        nachrichtElement.style.display = 'block';
+    }
+
+    // Nachricht ausblenden
+    function nachrichtAusblenden() {
+        nachrichtElement.style.display = 'none';
     }
 
     // Hangman zeichnen
@@ -123,6 +146,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Körper
         if (versuche >= 6) ctx.fillRect(150, 140, 10, 80);
+
+        // Arme
+        if (versuche >= 7) {
+            ctx.beginPath();
+            ctx.moveTo(150, 160); // Linker Arm
+            ctx.lineTo(120, 140);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(160, 160); // Rechter Arm
+            ctx.lineTo(190, 140);
+            ctx.stroke();
+        }
+
+        // Beine
+        if (versuche >= 8) {
+            ctx.beginPath();
+            ctx.moveTo(150, 220); // Linkes Bein
+            ctx.lineTo(120, 260);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(160, 220); // Rechtes Bein
+            ctx.lineTo(190, 260);
+            ctx.stroke();
+        }
     }
 
     // Neustart
