@@ -22,6 +22,8 @@ h1 {
     font-size: 1.5em;
     letter-spacing: 0.5em;
     margin: 20px 0;
+    font-family:'Courier New', Courier, monospace;
+    font-weight: bold;
 }
 
 #punkte {
@@ -58,7 +60,9 @@ h1 {
 
 .buchstabe-button:disabled {
     background-color: #ccc;
+    color: #888;
     cursor: not-allowed;
+    opacity: 0.6;
 }
 
 #neustart-button {

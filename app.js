@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let gerateneBuchstaben = [];
     let falscheVersuche = 0;
     let punkte = 0;
+    let erstesSpiel = true;
 
     const deutschesWortElement = document.getElementById('deutsches-wort');
     const danishDisplayElement = document.getElementById('danish-display');
@@ -33,7 +34,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Neues Spiel starten
     function neuesSpiel() {
-        aktuellesWort = vokabeln[Math.floor(Math.random() * vokabeln.length)];
+        if (erstesSpiel) {
+            // Beim ersten Spiel das erste Wort der Liste verwenden
+            aktuellesWort = vokabeln[0];
+            erstesSpiel = false; // Flagge zurücksetzen
+        } else {
+            // Bei jedem weiteren Spiel ein zufälliges Wort auswählen
+            aktuellesWort = vokabeln[Math.floor(Math.random() * vokabeln.length)];
+        }
         gerateneBuchstaben = [];
         falscheVersuche = 0;
         aktualisiereAnzeige();
@@ -54,34 +62,48 @@ document.addEventListener('DOMContentLoaded', () => {
         deutschesWortElement.textContent = `Deutsches Wort: ${aktuellesWort.deutsch}`;
         danishDisplayElement.textContent = aktuellesWort.danish
             .split('')
-            .map(buchstabe => (gerateneBuchstaben.includes(buchstabe.toLowerCase()) ? buchstabe : '_')
-            .join(' '));
+            .map(buchstabe => {
+                if (buchstabe === ' ') {
+                    return ' '; // Leerzeichen direkt anzeigen
+                } else if (gerateneBuchstaben.includes(buchstabe.toLowerCase())) {
+                    return buchstabe; // Geratene Buchstaben anzeigen
+                } else {
+                    return '_'; // Ungeratene Buchstaben als Unterstrich anzeigen
+                }
+            })
+            .join(''); // Leerzeichen bleiben erhalten
         punkteElement.textContent = `Punkte: ${punkte}`;
     }
 
-    // Buchstabe raten
     function buchstabeRaten(buchstabe) {
         if (gerateneBuchstaben.includes(buchstabe)) return;
 
         gerateneBuchstaben.push(buchstabe);
 
-        if (!aktuellesWort.danish.toLowerCase().includes(buchstabe)) {
+        // Deaktiviere den Button für den geratenen Buchstaben
+        const button = Array.from(buchstabenContainer.children).find(
+            btn => btn.textContent.toLowerCase() === buchstabe
+        );
+        if (button) {
+            button.disabled = true; // Button deaktivieren
+        }
+
+        // Überprüfen, ob der Buchstabe im Wort vorkommt (ignoriere Leerzeichen)
+        if (!aktuellesWort.danish.toLowerCase().includes(buchstabe) && buchstabe !== ' ') {
             falscheVersuche++;
             zeichneHangman(falscheVersuche);
         }
 
-        if (falscheVersuche === 6) {
-            alert(`Game Over! Das dänische Wort war: ${aktuellesWort.danish}`);
-            neustartButton.style.display = 'block';
-            buchstabenContainer.querySelectorAll('button').forEach(button => button.disabled = true);
-        } else if (aktuellesWort.danish.split('').every(b => gerateneBuchstaben.includes(b.toLowerCase()))) {
+        // Überprüfen, ob das Wort vollständig geraten wurde (ignoriere Leerzeichen)
+        const wortOhneLeerzeichen = aktuellesWort.danish.replace(/\s/g, '');
+        const gerateneBuchstabenOhneLeerzeichen = gerateneBuchstaben.filter(b => b !== ' ');
+        if (wortOhneLeerzeichen.split('').every(b => gerateneBuchstabenOhneLeerzeichen.includes(b.toLowerCase()))) {
             punkte++;
             alert('Richtig! Du hast einen Punkt erhalten.');
-            neuesSpiel();
+            neuesSpiel(); // Neues Spiel starten
         }
 
         aktualisiereAnzeige();
-        document.querySelector(`.buchstabe-button[disabled]`); // Deaktiviere den geratenen Buchstaben
     }
 
     // Hangman zeichnen
