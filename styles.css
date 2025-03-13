@@ -24,8 +24,17 @@ h1 {
     margin: 20px 0;
 }
 
-#versuche, #punkte {
+#punkte {
     font-weight: bold;
+}
+
+#hangman-container {
+    margin: 20px 0;
+}
+
+#hangman-canvas {
+    border: 1px solid #ccc;
+    background-color: #fff;
 }
 
 #buchstaben-container {
