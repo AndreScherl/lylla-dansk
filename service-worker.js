@@ -1,9 +1,9 @@
-const CACHE_NAME = 'vokabel-app-v1';
+const CACHE_NAME = 'lylla-dansk-v1';
 const ASSETS = [
-  '/vokabeltrainer-danemark/',
-  '/vokabeltrainer-danemark/index.html',
-  '/vokabeltrainer-danemark/styles.css',
-  '/vokabeltrainer-danemark/app.js',
-  '/vokabeltrainer-danemark/vokabeln.csv',
-  '/vokabeltrainer-danemark/manifest.json'
+  '/lylla-dansk/',
+  '/lylla-dansk/index.html',
+  '/lylla-dansk/styles.css',
+  '/lylla-dansk/app.js',
+  '/lylla-dansk/vokabeln.csv',
+  '/lylla-dansk/manifest.json'
 ];
