@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const [deutsch, danish] = line.split(',');
                 vokabeln.push({ deutsch, danish });
             });
+            spielstandLaden();
             neuesSpiel();
         });
 
@@ -101,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             nachrichtAnzeigen(`Game Over! Das dänische Wort war: ${aktuellesWort.danish}`);
             buchstabenContainer.querySelectorAll('button').forEach(button => button.disabled = true);
             neustartButton.style.display = 'block';
+            spielstandSpeichern();
             return;
         }
 
@@ -116,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         aktualisiereAnzeige();
+        spielstandSpeichern();
     }
 
     // Nachricht anzeigen
@@ -177,4 +180,26 @@ document.addEventListener('DOMContentLoaded', () => {
         punkte = 0;
         neuesSpiel();
     });
+
+    // Spielstand speichern
+    function spielstandSpeichern() {
+        const spielstand = {
+            punkte,
+            aktuellesWort,
+            gerateneBuchstaben,
+            falscheVersuche
+        };
+        localStorage.setItem('hangmanSpielstand', JSON.stringify(spielstand));
+    }
+
+    // Spielstand laden
+    function spielstandLaden() {
+        const spielstand = JSON.parse(localStorage.getItem('hangmanSpielstand'));
+        if (spielstand) {
+            punkte = spielstand.punkte || 0;
+            aktuellesWort = spielstand.aktuellesWort || null;
+            gerateneBuchstaben = spielstand.gerateneBuchstaben || [];
+            falscheVersuche = spielstand.falscheVersuche || 0;
+        }
+    }
 });
