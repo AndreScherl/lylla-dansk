@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         danishDisplayElement.textContent = aktuellesWort.danish
             .split('')
             .map(buchstabe => (gerateneBuchstaben.includes(buchstabe.toLowerCase()) ? buchstabe : '_')
-            .join(' ');
+            .join(' '));
         punkteElement.textContent = `Punkte: ${punkte}`;
     }
 
