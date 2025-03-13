@@ -1,0 +1,35 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    color: #c60c30; /* Dänemark Flagge Rot */
+}
+
+#game-container {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#danish-display {
+    font-size: 1.5em;
+    letter-spacing: 0.5em;
+    margin: 20px 0;
+}
+
+#versuche, #punkte {
+    font-weight: bold;
+}
+
+input, button {
+    margin: 10px;
+    padding: 10px;
+    font-size: 1em;
+}
